@@ -6,11 +6,13 @@ output_file = 'provsvar-summary.xlsx'
 config = pd.read_excel("config.xlsx")
 
 
+
 class LabReference:
     def __init__(self, name, min, max):
         self.name = name
         self.min = min
         self.max = max
+
 
 # Provsvar-fixed
 provsvar = pd.read_excel(origin_provsvar, sheet_name='Sheet1')
@@ -22,14 +24,15 @@ provsvar = pd.read_excel(origin_provsvar, sheet_name='Sheet1')
 bad_style = 'background-color: #FFC7CE'
 
 
-def get_style(value):
-    if isinstance(value, int) or isinstance(value, float):
-        if value > 1.33 or value < 1.05:
-            return bad_style
-        else:
-            return ''
+def get_style(val):
+    if not isinstance(val, int) and not isinstance(val, float):
+        return ''
+
+    if val > 1.33 or val < 1.05:
+        return bad_style
     else:
         return ''
+
 
 lab_references = []
 for i, row in config.iterrows():
@@ -62,11 +65,11 @@ provsvar_new.style.set_properties(**{'background-color': 'white',
     .applymap(lambda x: bad_style if x > lab_references[7].max or x < lab_references[7].min else '', subset=[lab_references[7].name])\
     .applymap(lambda x: bad_style if x > lab_references[8].max or x < lab_references[8].min else '', subset=[lab_references[8].name]) \
     .applymap(lambda x: bad_style if x > lab_references[9].max or x < lab_references[9].min else '', subset=[lab_references[9].name])\
-    .applymap(lambda x: bad_style if x > lab_references[10].max or x < lab_references[10].min else '', subset=[lab_references[10].name]) \
-    .applymap(lambda x: bad_style if x > lab_references[11].max or x < lab_references[11].min else '', subset=[lab_references[11].name]) \
-    .applymap(lambda x: bad_style if x > lab_references[12].max or x < lab_references[12].min else '', subset=[lab_references[12].name]) \
-    .applymap(lambda x: bad_style if x > lab_references[13].max or x < lab_references[13].min else '', subset=[lab_references[13].name]) \
-    .applymap(lambda x: bad_style if x > lab_references[14].max or x < lab_references[14].min else '', subset=[lab_references[14].name]) \
+    .applymap(lambda x: bad_style if x > lab_references[10].max or x < lab_references[10].min else '', subset=[lab_references[10].name])\
+    .applymap(lambda x: bad_style if x > lab_references[11].max or x < lab_references[11].min else '', subset=[lab_references[11].name])\
+    .applymap(lambda x: bad_style if x > lab_references[12].max or x < lab_references[12].min else '', subset=[lab_references[12].name])\
+    .applymap(lambda x: bad_style if x > lab_references[13].max or x < lab_references[13].min else '', subset=[lab_references[13].name])\
+    .applymap(lambda x: bad_style if x > lab_references[14].max or x < lab_references[14].min else '', subset=[lab_references[14].name])\
     .applymap(lambda x: bad_style if x > lab_references[15].max or x < lab_references[15].min else '', subset=[lab_references[15].name])\
     .applymap(lambda x: bad_style if x > lab_references[16].max or x < lab_references[16].min else '', subset=[lab_references[16].name])\
     .applymap(lambda x: bad_style if x > lab_references[17].max or x < lab_references[17].min else '', subset=[lab_references[17].name])\
