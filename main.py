@@ -60,7 +60,6 @@ headers = list(map(lambda x: x.name, lab_references))
 
 provsvar_new_df = pd.DataFrame(provsvar_df, columns=headers)
 
-
 provsvar_new_df.style.set_properties(**{'background-color': 'white',
                                      'color': 'black',
                                      'border-color': 'black',
@@ -92,7 +91,6 @@ provsvar_new_df.style.set_properties(**{'background-color': 'white',
     .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=False)
 
 provsvar_new_workbook = pxl.load_workbook(output_file_name)
-print(f'sheet: {provsvar_new_workbook.sheetnames}')
 worksheet = provsvar_new_workbook['Summary']
 worksheet.freeze_panes = 'B2'
 
@@ -110,6 +108,9 @@ with pd.ExcelWriter(output_file_name, engine='openpyxl') as writer:
         worksheet.title: worksheet for worksheet in provsvar_new_workbook.worksheets
     }
     references_df.to_excel(writer, 'References', index=False)
+    references_worksheet = provsvar_new_workbook['References']
+    references_worksheet.freeze_panes = 'B2'
+    references_worksheet.column_dimensions['A'].width = 30
     writer.save()
 
 current_path = os.getcwd()
