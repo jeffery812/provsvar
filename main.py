@@ -96,9 +96,14 @@ print(f'sheet: {provsvar_new_workbook.sheetnames}')
 worksheet = provsvar_new_workbook['Summary']
 worksheet.freeze_panes = 'B2'
 
+# set first column width
+worksheet.column_dimensions['A'].width = 18
+
+# set wrapText for the fist row
 for cell in worksheet[1]:
     cell.alignment = Alignment(wrapText=True)
 
+# write References
 with pd.ExcelWriter(output_file_name, engine='openpyxl') as writer:
     writer.book = provsvar_new_workbook
     writer.sheets = {
