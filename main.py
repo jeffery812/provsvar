@@ -1,10 +1,10 @@
 import pandas as pd
+import openpyxl as pxl
+import os
 
-
-origin_provsvar = 'Provsvar-fixed.xlsx'
-output_file = 'provsvar-summary.xlsx'
-config = pd.read_excel("config.xlsx")
-
+origin_provsvar_file_name = 'Provsvar-fixed.xlsx'
+output_file_name = 'Provsvar-summary.xlsx'
+references_df = pd.read_excel("References.xlsx")
 
 
 class LabReference:
@@ -15,11 +15,7 @@ class LabReference:
 
 
 # Provsvar-fixed
-provsvar = pd.read_excel(origin_provsvar, sheet_name='Sheet1')
-
-# Apply a conditional format to the cell range.
-# worksheet.conditional_format(0, 0, 200, 200, {'type': 'cell', 'criteria': '>', 'value': 1.33, 'format': format1})
-
+provsvar_df = pd.read_excel(origin_provsvar_file_name, sheet_name='Sheet1')
 
 bad_style_low = 'background-color: #FFFB00'
 bad_style_high = 'background-color: #FFC7CE'
@@ -37,7 +33,7 @@ def get_style(val, lab_reference):
 
 
 lab_references = []
-for i, row in config.iterrows():
+for i, row in references_df.iterrows():
     '''
     Name	                            Min	Max
     Datum		
@@ -51,18 +47,18 @@ for i, row in config.iterrows():
     lab_references.append(lab_item)
 
 
-for row in provsvar.index:
+for row in provsvar_df.index:
     for lab_item in lab_references:
-        value = provsvar[lab_item.name].at[row]
+        value = provsvar_df[lab_item.name].at[row]
         if isinstance(value, str):
             # Fix abnormal cell: "0,33, 0,33", convert "," to "."
-            provsvar[lab_item.name].at[row] = float(value.split(", ")[0].replace(",", "."))
+            provsvar_df[lab_item.name].at[row] = float(value.split(", ")[0].replace(",", "."))
 
 headers = list(map(lambda x: x.name, lab_references))
 
-provsvar_new = pd.DataFrame(provsvar, columns=headers)
+provsvar_new_df = pd.DataFrame(provsvar_df, columns=headers)
 
-provsvar_new.style.set_properties(**{'background-color': 'white',
+provsvar_new_df.style.set_properties(**{'background-color': 'white',
                                      'color': 'black',
                                      'border-color': 'black',
                                      'border-width': '1px',
@@ -90,7 +86,19 @@ provsvar_new.style.set_properties(**{'background-color': 'white',
     .applymap(lambda x: get_style(x, lab_references[20]), subset=[lab_references[20].name]) \
     .applymap(lambda x: get_style(x, lab_references[21]), subset=[lab_references[21].name]) \
     .applymap(lambda x: get_style(x, lab_references[22]), subset=[lab_references[22].name]) \
-    .to_excel(output_file, engine='openpyxl', sheet_name='summary', index=False)
+    .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=False)
+
+provsvar_new_excel_book = pxl.load_workbook(output_file_name)
+with pd.ExcelWriter(output_file_name, engine='openpyxl') as writer:
+    writer.book = provsvar_new_excel_book
+    writer.sheets = {
+        worksheet.title: worksheet for worksheet in provsvar_new_excel_book.worksheets
+    }
+    references_df.to_excel(writer, 'References', index=False)
+    writer.save()
+
+current_path = os.getcwd()
+os.rename(f'{current_path}/{output_file_name}', f'/Users/zhihuitang/OneDrive/Medical/{output_file_name}')
 
 print("complete")
 
