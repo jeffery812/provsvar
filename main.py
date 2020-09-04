@@ -1,6 +1,8 @@
 import pandas as pd
 import openpyxl as pxl
+from openpyxl.styles import Alignment
 import os
+import shutil
 
 origin_provsvar_file_name = 'Provsvar-fixed.xlsx'
 output_file_name = 'Provsvar-summary.xlsx'
@@ -58,6 +60,7 @@ headers = list(map(lambda x: x.name, lab_references))
 
 provsvar_new_df = pd.DataFrame(provsvar_df, columns=headers)
 
+
 provsvar_new_df.style.set_properties(**{'background-color': 'white',
                                      'color': 'black',
                                      'border-color': 'black',
@@ -88,17 +91,24 @@ provsvar_new_df.style.set_properties(**{'background-color': 'white',
     .applymap(lambda x: get_style(x, lab_references[22]), subset=[lab_references[22].name]) \
     .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=False)
 
-provsvar_new_excel_book = pxl.load_workbook(output_file_name)
+provsvar_new_workbook = pxl.load_workbook(output_file_name)
+print(f'sheet: {provsvar_new_workbook.sheetnames}')
+worksheet = provsvar_new_workbook['Summary']
+worksheet.freeze_panes = 'B2'
+
+for cell in worksheet[1]:
+    cell.alignment = Alignment(wrapText=True)
+
 with pd.ExcelWriter(output_file_name, engine='openpyxl') as writer:
-    writer.book = provsvar_new_excel_book
+    writer.book = provsvar_new_workbook
     writer.sheets = {
-        worksheet.title: worksheet for worksheet in provsvar_new_excel_book.worksheets
+        worksheet.title: worksheet for worksheet in provsvar_new_workbook.worksheets
     }
     references_df.to_excel(writer, 'References', index=False)
     writer.save()
 
 current_path = os.getcwd()
-os.rename(f'{current_path}/{output_file_name}', f'/Users/zhihuitang/OneDrive/Medical/{output_file_name}')
+shutil.copy(f'{current_path}/{output_file_name}', f'/Users/zhihuitang/OneDrive/Medical/{output_file_name}')
 
 print("complete")
 
