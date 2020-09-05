@@ -17,18 +17,18 @@ class LabReference:
 
 
 # Provsvar-fixed
-provsvar_df = pd.read_excel(origin_provsvar_file_name, sheet_name='Sheet1')
+provsvar_df = pd.read_excel(origin_provsvar_file_name, sheet_name='Sheet1', index_col=0)
 
 bad_style_low = 'background-color: #FFFB00'
 bad_style_high = 'background-color: #FFC7CE'
 
 
-def get_style(val, lab_reference):
+def get_style(*, val, reference):
     if not isinstance(val, int) and not isinstance(val, float):
         return ''
-    if val < lab_reference.min:
+    if val < reference.min:
         return bad_style_low
-    elif val > lab_reference.max:
+    elif val > reference.max:
         return bad_style_high
     else:
         return ''
@@ -65,30 +65,29 @@ provsvar_new_df.style.set_properties(**{'background-color': 'white',
                                      'border-color': 'black',
                                      'border-width': '1px',
                                      'border-style': 'solid'}) \
-    .applymap(lambda x: get_style(x, lab_references[1]), subset=[lab_references[1].name]) \
-    .applymap(lambda x: get_style(x, lab_references[1]), subset=[lab_references[1].name]) \
-    .applymap(lambda x: get_style(x, lab_references[2]), subset=[lab_references[2].name]) \
-    .applymap(lambda x: get_style(x, lab_references[3]), subset=[lab_references[3].name]) \
-    .applymap(lambda x: get_style(x, lab_references[4]), subset=[lab_references[4].name]) \
-    .applymap(lambda x: get_style(x, lab_references[5]), subset=[lab_references[5].name]) \
-    .applymap(lambda x: get_style(x, lab_references[6]), subset=[lab_references[6].name]) \
-    .applymap(lambda x: get_style(x, lab_references[7]), subset=[lab_references[7].name]) \
-    .applymap(lambda x: get_style(x, lab_references[8]), subset=[lab_references[8].name]) \
-    .applymap(lambda x: get_style(x, lab_references[9]), subset=[lab_references[9].name]) \
-    .applymap(lambda x: get_style(x, lab_references[10]), subset=[lab_references[10].name]) \
-    .applymap(lambda x: get_style(x, lab_references[11]), subset=[lab_references[11].name]) \
-    .applymap(lambda x: get_style(x, lab_references[12]), subset=[lab_references[12].name]) \
-    .applymap(lambda x: get_style(x, lab_references[13]), subset=[lab_references[13].name]) \
-    .applymap(lambda x: get_style(x, lab_references[14]), subset=[lab_references[14].name]) \
-    .applymap(lambda x: get_style(x, lab_references[15]), subset=[lab_references[15].name]) \
-    .applymap(lambda x: get_style(x, lab_references[16]), subset=[lab_references[16].name]) \
-    .applymap(lambda x: get_style(x, lab_references[17]), subset=[lab_references[17].name]) \
-    .applymap(lambda x: get_style(x, lab_references[18]), subset=[lab_references[18].name]) \
-    .applymap(lambda x: get_style(x, lab_references[19]), subset=[lab_references[19].name]) \
-    .applymap(lambda x: get_style(x, lab_references[20]), subset=[lab_references[20].name]) \
-    .applymap(lambda x: get_style(x, lab_references[21]), subset=[lab_references[21].name]) \
-    .applymap(lambda x: get_style(x, lab_references[22]), subset=[lab_references[22].name]) \
-    .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=False)
+    .applymap(lambda x: get_style(val=x, reference=lab_references[1]), subset=[lab_references[1].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[1]), subset=[lab_references[1].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[2]), subset=[lab_references[2].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[3]), subset=[lab_references[3].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[4]), subset=[lab_references[4].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[5]), subset=[lab_references[5].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[6]), subset=[lab_references[6].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[7]), subset=[lab_references[7].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[8]), subset=[lab_references[8].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[9]), subset=[lab_references[9].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[10]), subset=[lab_references[10].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[11]), subset=[lab_references[11].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[12]), subset=[lab_references[12].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[13]), subset=[lab_references[13].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[14]), subset=[lab_references[14].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[15]), subset=[lab_references[15].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[16]), subset=[lab_references[16].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[17]), subset=[lab_references[17].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[18]), subset=[lab_references[18].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[19]), subset=[lab_references[19].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[20]), subset=[lab_references[20].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[21]), subset=[lab_references[21].name]) \
+    .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=True)
 
 provsvar_new_workbook = pxl.load_workbook(output_file_name)
 worksheet = provsvar_new_workbook['Summary']
