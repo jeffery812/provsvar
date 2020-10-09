@@ -53,8 +53,11 @@ for row in provsvar_df.index:
     for lab_item in lab_references:
         value = provsvar_df[lab_item.name].at[row]
         if isinstance(value, str):
-            # Fix abnormal cell: "0,33, 0,33", convert "," to "."
-            provsvar_df[lab_item.name].at[row] = float(value.split(", ")[0].replace(",", "."))
+            # Fix abnormal cell: "0,33, 0,33", convert "," to "."            
+            try: 
+                provsvar_df[lab_item.name].at[row] = float(value.split(", ")[0].replace(",", "."))
+            except ValueError:
+                provsvar_df[lab_item.name].at[row] =  value
 
 headers = list(map(lambda x: x.name, lab_references))
 
@@ -87,6 +90,10 @@ provsvar_new_df.style.set_properties(**{'background-color': 'white',
     .applymap(lambda x: get_style(val=x, reference=lab_references[19]), subset=[lab_references[19].name]) \
     .applymap(lambda x: get_style(val=x, reference=lab_references[20]), subset=[lab_references[20].name]) \
     .applymap(lambda x: get_style(val=x, reference=lab_references[21]), subset=[lab_references[21].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[22]), subset=[lab_references[22].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[23]), subset=[lab_references[23].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[24]), subset=[lab_references[24].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[25]), subset=[lab_references[25].name]) \
     .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=True)
 
 provsvar_new_workbook = pxl.load_workbook(output_file_name)
