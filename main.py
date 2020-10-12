@@ -4,7 +4,7 @@ from openpyxl.styles import Alignment
 import os
 import shutil
 
-origin_provsvar_file_name = 'Provsvar-fixed.xlsx'
+origin_provsvar_file_name = 'Provsvar.xlsx'
 output_file_name = 'Provsvar-summary.xlsx'
 references_df = pd.read_excel("References.xlsx")
 
@@ -120,7 +120,7 @@ with pd.ExcelWriter(output_file_name, engine='openpyxl') as writer:
     writer.save()
 
 current_path = os.getcwd()
-shutil.copy(f'{current_path}/{output_file_name}', f'/Users/zhihuitang/OneDrive/Medical/{output_file_name}')
+shutil.copy(f'{current_path}/{output_file_name}', f'/Users/zhihuitang/Dropbox/Medical/{output_file_name}')
 
 print("complete")
 
