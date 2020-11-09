@@ -94,6 +94,10 @@ provsvar_new_df.style.set_properties(**{'background-color': 'white',
     .applymap(lambda x: get_style(val=x, reference=lab_references[23]), subset=[lab_references[23].name]) \
     .applymap(lambda x: get_style(val=x, reference=lab_references[24]), subset=[lab_references[24].name]) \
     .applymap(lambda x: get_style(val=x, reference=lab_references[25]), subset=[lab_references[25].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[26]), subset=[lab_references[26].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[27]), subset=[lab_references[27].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[28]), subset=[lab_references[28].name]) \
+    .applymap(lambda x: get_style(val=x, reference=lab_references[29]), subset=[lab_references[29].name]) \
     .to_excel(output_file_name, engine='openpyxl', sheet_name='Summary', index=True)
 
 provsvar_new_workbook = pxl.load_workbook(output_file_name)
